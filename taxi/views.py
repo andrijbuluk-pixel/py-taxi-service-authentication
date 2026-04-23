@@ -14,13 +14,13 @@ def index(request):
     num_cars = Car.objects.count()
     num_manufacturers = Manufacturer.objects.count()
     num_visits = request.session.get("num_visits", 0)
-    request.session["num_visits"] = num_visits
+    request.session["num_visits"] = num_visits + 1
 
     context = {
         "num_drivers": num_drivers,
         "num_cars": num_cars,
         "num_manufacturers": num_manufacturers,
-        "num_visits": num_visits + 1,
+        "num_visits": num_visits,
     }
 
     return render(request, "taxi/index.html", context=context)
@@ -37,6 +37,7 @@ class CarListView(LoginRequiredMixin, generic.ListView):
     model = Car
     paginate_by = 5
     queryset = Car.objects.select_related("manufacturer")
+    ordering = ["id"]
 
 
 class CarDetailView(LoginRequiredMixin, generic.DetailView):
@@ -46,6 +47,7 @@ class CarDetailView(LoginRequiredMixin, generic.DetailView):
 class DriverListView(LoginRequiredMixin, generic.ListView):
     model = Driver
     paginate_by = 5
+    ordering = ["id"]
 
 
 class DriverDetailView(LoginRequiredMixin, generic.DetailView):
